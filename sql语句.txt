@@ -1,0 +1,95 @@
+产品操作:
+	产品表:
+	CREATE TABLE product(
+	id varchar2(32) default SYS_GUID() PRIMARY KEY,
+	productNum VARCHAR2(50) NOT NULL,
+	productName VARCHAR2(50),
+	cityName VARCHAR2(50),
+	DepartureTime timestamp,
+	productPrice Number,
+	productDesc VARCHAR2(500),
+	productStatus INT,
+	CONSTRAINT product UNIQUE (id, productNum)
+	)
+订单操作:
+	订单表:
+	CREATE TABLE orders(
+	id varchar2(32) default SYS_GUID() PRIMARY KEY,
+	orderNum VARCHAR2(20) NOT NULL UNIQUE,
+	orderTime timestamp,
+	peopleCount INT,
+	orderDesc VARCHAR2(500),
+	payType INT,
+	orderStatus INT,
+	productId varchar2(32),
+	memberId varchar2(32),
+	FOREIGN KEY (productId) REFERENCES product(id),
+	FOREIGN KEY (memberId) REFERENCES member(id)
+	)
+	会员表:
+	CREATE TABLE member(
+	id varchar2(32) default SYS_GUID() PRIMARY KEY,
+	NAME VARCHAR2(20),
+	nickname VARCHAR2(20),
+	phoneNum VARCHAR2(20),
+	email VARCHAR2(20)
+	)
+	旅客表:
+	CREATE TABLE traveller(
+	id varchar2(32) default SYS_GUID() PRIMARY KEY,
+	NAME VARCHAR2(20),
+	sex VARCHAR2(20),
+	phoneNum VARCHAR2(20),
+	credentialsType INT,
+	credentialsNum VARCHAR2(50),
+	travellerType INT
+	)
+权限操作:
+    用户表:
+    CREATE TABLE users(
+    id varchar2(32) default SYS_GUID() PRIMARY KEY,
+    email VARCHAR2(50) UNIQUE NOT NULL,
+    username VARCHAR2(50),
+    PASSWORD VARCHAR2(50),
+    phoneNum VARCHAR2(20),
+    STATUS INT
+    )
+    角色表:
+    CREATE TABLE role(
+    id varchar2(32) default SYS_GUID() PRIMARY KEY,
+    roleName VARCHAR2(50) ,
+    roleDesc VARCHAR2(50)
+    )
+    权限表:
+    CREATE TABLE permission(
+    id varchar2(32) default SYS_GUID() PRIMARY KEY,
+    permissionName VARCHAR2(50) ,
+    url VARCHAR2(50)
+    )
+    用户_角色中间表:
+    CREATE TABLE users_role(
+    userId varchar2(32),
+    roleId varchar2(32),
+    PRIMARY KEY(userId,roleId),
+    FOREIGN KEY (userId) REFERENCES users(id),
+    FOREIGN KEY (roleId) REFERENCES role(id)
+    )
+    角色_用户中间表:
+    CREATE TABLE role_permission(
+    permissionId varchar2(32),
+    roleId varchar2(32),
+    PRIMARY KEY(permissionId,roleId),
+    FOREIGN KEY (permissionId) REFERENCES permission(id),
+    FOREIGN KEY (roleId) REFERENCES role(id)
+    )
+日志操作:
+    日志表:
+    CREATE TABLE sysLog(
+    id VARCHAR2(32) default SYS_GUID() PRIMARY KEY,
+    visitTime timestamp,
+    username VARCHAR2(50),
+    ip VARCHAR2(30),
+    url VARCHAR2(50),
+    executionTime int,
+    method VARCHAR2(200)
+    )
